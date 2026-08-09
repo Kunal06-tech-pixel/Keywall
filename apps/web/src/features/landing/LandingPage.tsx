@@ -2,6 +2,7 @@ import '../../styles/landing.css'
 import { Navbar } from '../../components/landing/Navbar'
 import { HeroSection } from '../../components/landing/HeroSection'
 import { SecurityArchitectureSection } from '../../components/landing/SecurityArchitectureSection'
+import { EncryptionFlowSection } from '../../components/landing/EncryptionFlowSection'
 import { PrivacySection } from '../../components/landing/PrivacySection'
 import { ReleaseBoundarySection } from '../../components/landing/ReleaseBoundarySection'
 import { ClosingSection } from '../../components/landing/ClosingSection'
@@ -14,6 +15,7 @@ export function LandingPage() {
       <main aria-label="Public">
         <HeroSection />
         <SecurityArchitectureSection />
+        <EncryptionFlowSection />
         <PrivacySection />
         <ReleaseBoundarySection />
         <ClosingSection />

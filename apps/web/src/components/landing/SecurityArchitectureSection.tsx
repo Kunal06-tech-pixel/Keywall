@@ -1,187 +1,63 @@
-import { Lock, ShieldCheck, Database, Key, Wifi, Server, Laptop, Smartphone } from 'lucide-react'
-import { brand } from '@keywall/brand'
-import { SectionBadge } from './SectionBadge'
+import { Database, HardDrive, KeyRound, Lock, ShieldCheck, WifiOff } from 'lucide-react'
 import { FadeIn } from '../../lib/FadeIn'
 import { StaggerContainer, StaggerItem } from '../../lib/StaggerContainer'
 
+const architecture = [
+  {
+    number: '01',
+    title: 'Client-side encryption',
+    description: 'Vault items, attachments, and recovery material are encrypted on your device before anything leaves it.',
+    proof: 'Keys never leave your device',
+    icon: KeyRound,
+    visual: <><span className="kw-visual-node strong"><KeyRound size={22} /></span><span className="kw-visual-path" /><span className="kw-visual-node"><Lock size={19} /></span></>,
+  },
+  {
+    number: '02',
+    title: 'Ciphertext-only service',
+    description: 'The API stores opaque identifiers, revisions, nonces, timestamps, and authenticated ciphertext—never your plaintext.',
+    proof: 'Zero visibility into vault data',
+    icon: Database,
+    visual: <div className="kw-cipher-stack"><span>AEAD · xG7k…</span><span>nonce · 8f1a…</span><span>revision · 12</span></div>,
+  },
+  {
+    number: '03',
+    title: 'Local-first reads',
+    description: 'An encrypted IndexedDB cache keeps your vault responsive and useful when the network is unavailable.',
+    proof: 'Offline-ready by design',
+    icon: WifiOff,
+    visual: <><span className="kw-device-frame"><HardDrive size={24} /><small>Encrypted cache</small></span><span className="kw-offline-pill"><WifiOff size={13} /> Offline</span></>,
+  },
+]
+
 export function SecurityArchitectureSection() {
   return (
-    <section id="security" className="kw-section kw-security-section">
+    <section id="security" className="kw-section kw-architecture-section">
       <div className="landing-container">
-        {/* Header */}
-        <FadeIn className="kw-section-header">
-          <SectionBadge>SECURITY ARCHITECTURE</SectionBadge>
-          <h2 className="kw-section-title">
-            Built around a simple truth:<br />
-            <span className="kw-gradient-text">only you</span> can read your data.
-          </h2>
-          <p className="kw-section-subtitle">
-            Server-side systems only store ciphertext and metadata.<br />
-            Your keys stay under your control.
-          </p>
+        <FadeIn className="kw-editorial-heading">
+          <div className="kw-section-kicker">Security architecture</div>
+          <h2>Built around one boundary:<br /><span>your device.</span></h2>
+          <p>Keywall separates the place where secrets are readable from the service that synchronizes them.</p>
         </FadeIn>
 
-        {/* 3 Architecture Cards */}
-        <StaggerContainer staggerDelay={0.12} className="kw-sec-grid">
-          {/* Card 1: Client-Side Encryption */}
-          <StaggerItem>
-            <div className="kw-card kw-sec-card">
-              <div className="kw-card-visual vault-visual">
-                <div className="visual-top-bar">
-                  <div className="window-dots">
-                    <span className="dot red" />
-                    <span className="dot yellow" />
-                    <span className="dot green" />
+        <StaggerContainer staggerDelay={0.1} className="kw-architecture-list">
+          {architecture.map((item) => {
+            const Icon = item.icon
+            return (
+              <StaggerItem key={item.number}>
+                <article className="kw-architecture-row">
+                  <span className="kw-row-number">{item.number}</span>
+                  <div className="kw-row-copy">
+                    <h3>{item.title}</h3>
+                    <p>{item.description}</p>
+                    <span className="kw-row-proof"><Icon size={15} /> {item.proof}</span>
                   </div>
-                  <span className="window-title">Keywall Vault</span>
-                </div>
-                <div className="visual-body vault-body">
-                  <div className="vault-sidebar">
-                    <div className="active-item">🏢 All items</div>
-                    <div>🔑 Passwords</div>
-                    <div>📝 Secure Notes</div>
-                    <div>📄 Documents</div>
-                    <div>🔢 TOTP Codes</div>
-                    <div>🪪 Identities</div>
-                  </div>
-                  <div className="vault-content">
-                    <div className="glowing-lock-circle">
-                      <Lock size={28} />
-                    </div>
-                    <div className="status-indicator">
-                      Local encryption: <span className="green-dot">•</span> Active
-                    </div>
-                    <p className="sub-text">Your data is encrypted on this device</p>
-                    <button className="lock-btn">🔒 Lock Vault</button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="kw-card-content">
-                <h3>Client-side encryption</h3>
-                <p>
-                  Vault items, attachments, and recovery material are encrypted on your device before anything leaves it.
-                </p>
-                <div className="kw-card-chip">
-                  <ShieldCheck size={14} />
-                  <span>Keys never leave your device</span>
-                </div>
-              </div>
-            </div>
-          </StaggerItem>
-
-          {/* Card 2: Ciphertext-Only Service */}
-          <StaggerItem>
-            <div className="kw-card kw-sec-card">
-              <div className="kw-card-visual api-visual">
-                <div className="visual-top-bar">
-                  <span className="window-title">Keywall API</span>
-                  <span className="healthy-badge">● Healthy</span>
-                </div>
-                <div className="visual-body api-body">
-                  <table className="api-table">
-                    <thead>
-                      <tr>
-                        <th>Item ID</th>
-                        <th>Nonce</th>
-                        <th>Revision</th>
-                        <th>Ciphertext</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>a7f3e9c2...</td>
-                        <td>8f1a2b3c...</td>
-                        <td>12</td>
-                        <td className="code-col">AEAD: xG7k...</td>
-                      </tr>
-                      <tr>
-                        <td>c91d4b77...</td>
-                        <td>9c2b7d1a...</td>
-                        <td>7</td>
-                        <td className="code-col">AEAD: bN4s...</td>
-                      </tr>
-                      <tr>
-                        <td>e3fb2a19f...</td>
-                        <td>d5e6f2a1...</td>
-                        <td>3</td>
-                        <td className="code-col">AEAD: m2Qp...</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <div className="kw-card-content">
-                <h3>Ciphertext-only service</h3>
-                <p>
-                  The API stores opaque IDs, revisions, nonces, timestamps, and ciphertexts — never your keys or plaintext.
-                </p>
-                <div className="kw-card-chip">
-                  <Lock size={14} />
-                  <span>Zero visibility into your data</span>
-                </div>
-              </div>
-            </div>
-          </StaggerItem>
-
-          {/* Card 3: Local-First Reads */}
-          <StaggerItem>
-            <div className="kw-card kw-sec-card">
-              <div className="kw-card-visual offline-visual">
-                <div className="visual-top-bar">
-                  <span className="window-title">Keywall App</span>
-                  <span className="offline-badge">● Offline <small>Local cache active</small></span>
-                </div>
-                <div className="visual-body offline-body">
-                  <div className="devices-mockup">
-                    <div className="laptop-screen">
-                      <Laptop size={36} />
-                      <div className="screen-tag">Keywall Local</div>
-                    </div>
-                    <div className="phone-screen">
-                      <Smartphone size={24} />
-                      <div className="offline-pill">Offline</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="kw-card-content">
-                <h3>Local-first reads</h3>
-                <p>
-                  An encrypted IndexedDB cache keeps the app fast and useful even when the network is unavailable.
-                </p>
-                <div className="kw-card-chip">
-                  <Wifi size={14} />
-                  <span>Works anywhere, even offline</span>
-                </div>
-              </div>
-            </div>
-          </StaggerItem>
+                  <div className="kw-row-visual" aria-hidden="true">{item.visual}</div>
+                </article>
+              </StaggerItem>
+            )
+          })}
         </StaggerContainer>
-
-        {/* Bottom Feature Pills */}
-        <StaggerContainer staggerDelay={0.08} className="kw-sec-bottom-pills">
-          <StaggerItem>
-            <div className="kw-bottom-pill">
-              <Key size={16} />
-              <span>Device-generated keys</span>
-            </div>
-          </StaggerItem>
-          <StaggerItem>
-            <div className="kw-bottom-pill">
-              <Database size={16} />
-              <span>Opaque metadata</span>
-            </div>
-          </StaggerItem>
-          <StaggerItem>
-            <div className="kw-bottom-pill">
-              <Wifi size={16} />
-              <span>Offline-ready</span>
-            </div>
-          </StaggerItem>
-        </StaggerContainer>
+        <div className="kw-architecture-note"><ShieldCheck size={16} /> The service cannot derive your vault key from synchronized data.</div>
       </div>
     </section>
   )

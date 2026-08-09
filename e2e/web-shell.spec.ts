@@ -13,7 +13,8 @@ test.describe('Keywall production web shell', () => {
 
   test('serves accessible auth form from the app route', async ({ page }) => {
     await page.goto('/app')
-    await expect(page.getByRole('heading', { name: /unlock keywall/i })).toBeVisible()
+    await expect(page.getByRole('heading', { name: /sign in to keywall/i })).toBeVisible()
+    await expect(page.getByRole('link', { name: /return to keywall landing page/i })).toHaveAttribute('href', '/')
     await expect(page.getByLabel('Email address')).toHaveAttribute('autocomplete', 'username')
     await expect(page.getByLabel('Master password')).toHaveAttribute('type', 'password')
   })
@@ -31,6 +32,6 @@ test.describe('Keywall production web shell', () => {
     await page.goto('/recover')
     await expect(page.getByRole('heading', { name: /request account recovery/i })).toBeVisible()
     await page.goto('/verify-email?token=invalid-test-token')
-    await expect(page.getByRole('heading', { name: /unlock keywall/i })).toBeVisible()
+    await expect(page.getByRole('heading', { name: /sign in to keywall/i })).toBeVisible()
   })
 })

@@ -1,43 +1,42 @@
-import { Disc as Discord, Github, Moon, Sparkles, Sun, Twitter } from 'lucide-react'
+import { ArrowRight, ShieldCheck } from 'lucide-react'
 import { Logo } from '../../ui/Logo'
 import { FadeIn } from '../../lib/FadeIn'
+
+const footerLinks = [
+  { label: 'Product', href: '#product' },
+  { label: 'Security', href: '#security' },
+  { label: 'How it works', href: '#flow' },
+  { label: 'Privacy', href: '#privacy' },
+  { label: 'Beta status', href: '#beta' },
+  { label: 'Questions', href: '#questions' },
+]
 
 export function Footer() {
   return (
     <footer className="kw-footer">
-      <FadeIn distance={14} className="landing-container kw-footer-inner">
-        {/* Logo */}
-        <Logo light />
+      <FadeIn distance={14} className="landing-container">
+        <div className="kw-footer-main">
+          <div className="kw-footer-brand">
+            <a href="#product" aria-label="Keywall home"><Logo light /></a>
+            <p>A zero-knowledge vault with client-side encryption and ciphertext-only sync.</p>
+            <span><ShieldCheck size={15} /> Controlled production beta</span>
+          </div>
 
-        {/* Footer Nav Links */}
-        <nav className="kw-footer-nav" aria-label="Footer Navigation">
-          <a href="/docs" id="docs">Docs</a>
-          <a href="#security">Security</a>
-          <a href="#privacy">Privacy</a>
-          <a href="#status">Status</a>
-          <a href="#pricing" id="pricing">Pricing</a>
-        </nav>
+          <nav className="kw-footer-nav" aria-label="Footer navigation">
+            <h2>Explore</h2>
+            {footerLinks.map((link) => <a key={link.href} href={link.href}>{link.label}</a>)}
+          </nav>
 
-        {/* Social & Theme Icons */}
-        <div className="kw-footer-icons" aria-label="Social and settings">
-          <a href="https://github.com" target="_blank" rel="noreferrer" aria-label="GitHub">
-            <Github size={18} />
-          </a>
-          <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="Twitter">
-            <Twitter size={18} />
-          </a>
-          <a href="https://discord.com" target="_blank" rel="noreferrer" aria-label="Discord">
-            <Discord size={18} />
-          </a>
-          <span className="icon-btn" aria-label="Features">
-            <Sparkles size={18} />
-          </span>
-          <span className="icon-btn" aria-label="Dark theme">
-            <Moon size={18} />
-          </span>
-          <span className="icon-btn" aria-label="Light theme">
-            <Sun size={18} />
-          </span>
+          <div className="kw-footer-actions">
+            <h2>Your vault</h2>
+            <a href="/app">Sign in <ArrowRight size={14} /></a>
+            <a href="/app?mode=register">Create account <ArrowRight size={14} /></a>
+          </div>
+        </div>
+
+        <div className="kw-footer-bottom">
+          <span>Keywall</span>
+          <span>Keys stay on your device. Servers synchronize ciphertext only.</span>
         </div>
       </FadeIn>
     </footer>

@@ -1,96 +1,63 @@
-import { ChevronRight, EyeOff, Key, Lock, RefreshCw, Shield, ShieldCheck } from 'lucide-react'
-import { SectionBadge } from './SectionBadge'
+import { EyeOff, Fingerprint, KeyRound, RefreshCw, ShieldCheck } from 'lucide-react'
 import { FadeIn } from '../../lib/FadeIn'
 import { StaggerContainer, StaggerItem } from '../../lib/StaggerContainer'
 
-const privacyItems = [
+const trustFacts = [
   {
-    icon: Key,
-    text: 'Master passwords and vault keys never leave the browser.',
+    label: 'Vault keys',
+    value: 'Device only',
+    description: 'Master passwords and vault keys never leave the browser.',
+    icon: KeyRound,
   },
   {
-    icon: ShieldCheck,
-    text: 'Argon2id, HKDF, and AES-256-GCM separate authentication from vault wrapping.',
-  },
-  {
-    icon: RefreshCw,
-    text: 'Recovery needs the offline recovery key; email alone cannot decrypt a vault.',
-  },
-  {
+    label: 'Server visibility',
+    value: 'Ciphertext',
+    description: 'The service stores encrypted records and operational metadata.',
     icon: EyeOff,
-    text: 'Compromised-password checks are opt-in and use k-anonymous range queries.',
+  },
+  {
+    label: 'Recovery',
+    value: 'Offline key',
+    description: 'Email alone cannot decrypt a vault or replace the recovery key.',
+    icon: RefreshCw,
+  },
+  {
+    label: 'Breach checks',
+    value: 'Opt-in',
+    description: 'Compromised-password checks use k-anonymous range queries.',
+    icon: Fingerprint,
   },
 ]
 
 export function PrivacySection() {
   return (
     <section id="privacy" className="kw-section kw-privacy-section">
-      <div className="landing-container kw-privacy-grid">
-        {/* Left Side Info */}
-        <FadeIn direction="left" distance={30} className="kw-privacy-left">
-          <SectionBadge>WHAT STAYS PRIVATE</SectionBadge>
-          <h2 className="kw-privacy-title">
-            Secrets are decrypted only{' '}
-            <span className="kw-gradient-text">inside the app session.</span>
-          </h2>
-          <p className="kw-privacy-subtitle">
-            Keywall is built with zero-knowledge by design.<br />
-            Your data stays protected—end to end.
-          </p>
-
-          <div className="kw-privacy-control-badge">
-            <div className="icon-circle">
-              <ShieldCheck size={18} />
-            </div>
-            <span>You stay in control. Always.</span>
-          </div>
-        </FadeIn>
-
-        {/* Right Side Visual & List */}
-        <div className="kw-privacy-right">
-          {/* Top Session Window Graphic */}
-          <FadeIn delay={0.15} scale={0.96}>
-            <div className="kw-session-graphic-card">
-              <div className="window-dots">
-                <span className="dot red" />
-                <span className="dot yellow" />
-                <span className="dot green" />
-              </div>
-
-              <div className="session-shield-container">
-                <div className="aura-ring outer" />
-                <div className="aura-ring inner" />
-                <div className="shield-box">
-                  <Shield size={44} className="shield-bg-icon" />
-                  <Lock size={20} className="shield-lock-icon" />
-                </div>
-
-                <div className="session-status-tag">
-                  <span className="purple-dot">●</span>
-                  <span>Decrypted in this session</span>
-                </div>
-              </div>
-            </div>
+      <div className="landing-container">
+        <div className="kw-privacy-intro">
+          <FadeIn direction="right" distance={26}>
+            <div className="kw-section-kicker">What stays private</div>
+            <h2>Secrets are decrypted only <span>inside your app session.</span></h2>
           </FadeIn>
-
-          {/* 4 List Cards */}
-          <StaggerContainer staggerDelay={0.08} className="kw-privacy-list">
-            {privacyItems.map((item, idx) => {
-              const IconComp = item.icon
-              return (
-                <StaggerItem key={idx}>
-                  <div className="kw-privacy-item-card">
-                    <div className="item-icon-box">
-                      <IconComp size={18} />
-                    </div>
-                    <span className="item-text">{item.text}</span>
-                    <ChevronRight size={18} className="item-arrow" />
-                  </div>
-                </StaggerItem>
-              )
-            })}
-          </StaggerContainer>
+          <FadeIn delay={0.12} direction="left" distance={26} className="kw-privacy-summary">
+            <p>Authentication, encryption, recovery, and breach checks are designed so one service cannot quietly become the key to everything.</p>
+            <span><ShieldCheck size={17} /> You stay in control of the readable vault.</span>
+          </FadeIn>
         </div>
+
+        <StaggerContainer staggerDelay={0.08} className="kw-trust-grid">
+          {trustFacts.map((fact) => {
+            const Icon = fact.icon
+            return (
+              <StaggerItem key={fact.label}>
+                <article className="kw-trust-cell">
+                  <div className="kw-trust-cell-head"><span>{fact.label}</span><Icon size={18} /></div>
+                  <strong>{fact.value}</strong>
+                  <p>{fact.description}</p>
+                </article>
+              </StaggerItem>
+            )
+          })}
+        </StaggerContainer>
       </div>
     </section>
   )

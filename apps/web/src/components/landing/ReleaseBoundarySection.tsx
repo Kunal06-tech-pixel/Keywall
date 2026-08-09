@@ -107,9 +107,12 @@ export function ReleaseBoundarySection() {
 
                 return (
                   <div key={gate.id} className="kw-gate-item">
-                    <div
+                    <button
+                      type="button"
                       className="gate-item-row"
                       onClick={() => setExpandedGate(isExpanded ? null : gate.id)}
+                      aria-expanded={isExpanded}
+                      aria-controls={`release-gate-details-${gate.id}`}
                     >
                       <div className="gate-item-icon">
                         <IconComp size={18} />
@@ -122,11 +125,12 @@ export function ReleaseBoundarySection() {
                         <span className="pending-badge">{gate.status}</span>
                         <ChevronDown size={16} className={`chevron ${isExpanded ? 'open' : ''}`} />
                       </div>
-                    </div>
+                    </button>
 
                     <AnimatePresence>
                       {isExpanded && (
                         <motion.div
+                          id={`release-gate-details-${gate.id}`}
                           className="gate-expanded-details"
                           initial={prefersReducedMotion ? false : { height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}

@@ -24,6 +24,7 @@ import { searchableValues, safeSubtitle } from './vault-item-validation'
 import { ReauthenticationDialog } from './ReauthenticationDialog'
 import { VaultItemDetails } from './VaultItemDetails'
 import { LockStatus3D } from '../../components/3d/LockStatus3D'
+import { SidebarDockGroup, type SidebarDockItemData } from './SidebarDock'
 
 export type View = 'all' | 'favorites' | VaultItemType | 'archive' | 'health' | 'recent'
 
@@ -401,6 +402,16 @@ export function VaultScreen({ email, onLock }: { email: string; onLock: () => vo
     return items.filter((item) => item.type === id && !item.archived).length
   }
 
+  const withCounts = (navigation: Array<{ id: View; label: string; icon: typeof KeyRound }>): SidebarDockItemData<View>[] => (
+    navigation.map((item) => ({ ...item, count: countFor(item.id) }))
+  )
+
+  const selectNavigation = (id: View) => {
+    setView(id)
+    setSidebar(false)
+    setSelected(null)
+  }
+
   const activeNav = allNavigation.find((item) => item.id === view)
 
   return (
@@ -449,50 +460,9 @@ export function VaultScreen({ email, onLock }: { email: string; onLock: () => vo
           </div>
 
           <nav className="sidebar-nav">
-            <div className="nav-group">
-              <p className="nav-label">Vault Overview</p>
-              {mainNavigation.map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  className={`nav-item ${view === id ? 'active' : ''}`}
-                  onClick={() => { setView(id); setSidebar(false); setSelected(null) }}
-                >
-                  <Icon size={16} />
-                  <span>{label}</span>
-                  <em className="nav-count">{countFor(id)}</em>
-                </button>
-              ))}
-            </div>
-
-            <div className="nav-group">
-              <p className="nav-label">Item Categories</p>
-              {categoryNavigation.map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  className={`nav-item ${view === id ? 'active' : ''}`}
-                  onClick={() => { setView(id); setSidebar(false); setSelected(null) }}
-                >
-                  <Icon size={16} />
-                  <span>{label}</span>
-                  <em className="nav-count">{countFor(id)}</em>
-                </button>
-              ))}
-            </div>
-
-            <div className="nav-group">
-              <p className="nav-label">Security & Trash</p>
-              {systemNavigation.map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  className={`nav-item ${view === id ? 'active' : ''}`}
-                  onClick={() => { setView(id); setSidebar(false); setSelected(null) }}
-                >
-                  <Icon size={16} />
-                  <span>{label}</span>
-                  <em className="nav-count">{countFor(id)}</em>
-                </button>
-              ))}
-            </div>
+            <SidebarDockGroup label="Vault Overview" items={withCounts(mainNavigation)} activeId={view} onSelect={selectNavigation} />
+            <SidebarDockGroup label="Item Categories" items={withCounts(categoryNavigation)} activeId={view} onSelect={selectNavigation} />
+            <SidebarDockGroup label="Security & Trash" items={withCounts(systemNavigation)} activeId={view} onSelect={selectNavigation} />
           </nav>
 
           <div className="sidebar-footer">
@@ -544,12 +514,15 @@ export function VaultScreen({ email, onLock }: { email: string; onLock: () => vo
           {view === 'all' && (
             <VaultDashboard
               items={items}
+              visibleItems={filtered}
               health={health}
               compromised={compromised}
               loading={message.startsWith('Synchronizing')}
               onSelect={setSelected}
               onNavigate={(next) => { setView(next); setSelected(null) }}
               onToggleFavorite={(item) => void save({ ...item, favorite: !item.favorite, updatedAt: new Date().toISOString() })}
+              onCreateItem={() => setEditing(null)}
+              onImport={() => importInput.current?.click()}
             />
           )}
 
@@ -587,7 +560,7 @@ export function VaultScreen({ email, onLock }: { email: string; onLock: () => vo
                 </div>
               </div>
             </section>
-          ) : (
+          ) : view === 'all' ? null : (
             <section id="complete-vault-list" className="vault-list production-list">
               {filtered.length ? (
                 <>
@@ -627,9 +600,6 @@ export function VaultScreen({ email, onLock }: { email: string; onLock: () => vo
                   <span><KeyRound size={26} /></span>
                   <h2>No encrypted items found</h2>
                   <p>Add a secure item to store logins, cards, or notes encrypted on your device.</p>
-                  <button className="primary-button" onClick={() => setEditing(null)}>
-                    <Plus size={15} /> Add first item
-                  </button>
                 </div>
               )}
             </section>

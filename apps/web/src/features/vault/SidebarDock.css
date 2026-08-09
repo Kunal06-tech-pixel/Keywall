@@ -1,0 +1,64 @@
+.production-shell .sidebar-dock-group {
+  position: relative;
+  isolation: isolate;
+}
+
+.production-shell .sidebar-dock-item {
+  position: relative;
+  flex: 0 0 auto;
+  overflow: hidden;
+  transform-origin: left center;
+}
+
+.production-shell .sidebar-dock-group[data-effects='enabled'] .sidebar-dock-item {
+  will-change: height;
+}
+
+.production-shell .sidebar-dock-icon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center;
+}
+
+.production-shell .sidebar-dock-copy {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.production-shell .sidebar-dock-item::after {
+  content: '';
+  position: absolute;
+  inset: 4px auto 4px 0;
+  width: 2px;
+  border-radius: 99px;
+  opacity: 0;
+  background: #c36fff;
+  box-shadow: 0 0 10px rgba(168, 85, 247, .6);
+  transform: scaleY(.45);
+  transition: opacity 160ms ease, transform 220ms ease;
+}
+
+.production-shell .sidebar-dock-item:hover::after,
+.production-shell .sidebar-dock-item:focus-visible::after,
+.production-shell .sidebar-dock-item.active::after {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+.production-shell .sidebar-dock-item:focus-visible {
+  outline: 2px solid rgba(202, 126, 255, .82);
+  outline-offset: -2px;
+}
+
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .production-shell .sidebar-dock-group[data-effects] .sidebar-dock-item {
+    height: 30px !important;
+    will-change: auto;
+  }
+}

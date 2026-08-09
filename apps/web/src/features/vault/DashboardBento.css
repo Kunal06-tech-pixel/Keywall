@@ -1,0 +1,130 @@
+.production-shell .dashboard-bento-grid {
+  --bento-glow: 168, 85, 247;
+  --bento-spotlight-x: 50%;
+  --bento-spotlight-y: 50%;
+  --bento-spotlight-opacity: 0;
+  position: relative;
+  isolation: isolate;
+}
+
+.production-shell .dashboard-bento-spotlight {
+  position: absolute;
+  z-index: 0;
+  width: 440px;
+  height: 440px;
+  left: var(--bento-spotlight-x);
+  top: var(--bento-spotlight-y);
+  border-radius: 50%;
+  opacity: var(--bento-spotlight-opacity);
+  background: radial-gradient(circle, rgba(var(--bento-glow), .12) 0, rgba(var(--bento-glow), .045) 33%, transparent 70%);
+  filter: blur(10px);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: opacity 180ms ease;
+}
+
+.production-shell .dashboard-bento-card {
+  --bento-glow-x: 50%;
+  --bento-glow-y: 50%;
+  --bento-glow-intensity: 0;
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: hidden;
+  transform-style: preserve-3d;
+}
+
+.production-shell .dashboard-bento-card::before,
+.production-shell .dashboard-bento-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.production-shell .dashboard-bento-card::before {
+  z-index: 1;
+  padding: 1px;
+  opacity: calc(.15 + var(--bento-glow-intensity));
+  background: radial-gradient(
+    190px circle at var(--bento-glow-x) var(--bento-glow-y),
+    rgba(var(--bento-glow), .95),
+    rgba(var(--bento-glow), .32) 38%,
+    transparent 72%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.production-shell .dashboard-bento-card::after {
+  z-index: 0;
+  opacity: calc(var(--bento-glow-intensity) * .34);
+  background: radial-gradient(
+    260px circle at var(--bento-glow-x) var(--bento-glow-y),
+    rgba(var(--bento-glow), .18),
+    transparent 70%
+  );
+}
+
+.production-shell .dashboard-bento-card-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.production-shell .dashboard-summary-grid.dashboard-bento-grid {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.production-shell .dashboard-summary-grid .bento-vault-card { grid-column: span 2; }
+.production-shell .dashboard-summary-grid .bento-security-card { grid-column: span 3; }
+.production-shell .dashboard-summary-grid .bento-sync-card { grid-column: span 3; }
+.production-shell .dashboard-summary-grid .bento-health-card { grid-column: span 4; }
+
+.production-shell .dashboard-bento-particle,
+.production-shell .dashboard-bento-ripple {
+  position: absolute;
+  z-index: 4;
+  display: block;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.production-shell .dashboard-bento-particle {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgb(var(--bento-glow));
+  box-shadow: 0 0 8px rgba(var(--bento-glow), .72);
+}
+
+.production-shell .dashboard-bento-ripple {
+  width: 14px;
+  height: 14px;
+  border: 1px solid rgba(var(--bento-glow), .48);
+  border-radius: 50%;
+  background: rgba(var(--bento-glow), .08);
+}
+
+@media (max-width: 1240px) {
+  .production-shell .dashboard-summary-grid .dashboard-bento-card { grid-column: span 6; }
+}
+
+@media (max-width: 650px) {
+  .production-shell .dashboard-summary-grid .dashboard-bento-card { grid-column: span 12; }
+}
+
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .production-shell .dashboard-bento-spotlight,
+  .production-shell .dashboard-bento-card::after {
+    display: none;
+  }
+
+  .production-shell .dashboard-bento-card::before { opacity: .15; }
+  .production-shell .dashboard-bento-card-content { will-change: auto; }
+}

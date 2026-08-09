@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { ArrowRight, Menu, X } from 'lucide-react'
 import { brand } from '@keywall/brand'
@@ -10,6 +10,8 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const prefersReducedMotion = useReducedMotion()
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
+  const firstMobileLinkRef = useRef<HTMLAnchorElement>(null)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -18,51 +20,86 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  useEffect(() => {
+    if (!mobileMenuOpen) return
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    firstMobileLinkRef.current?.focus()
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setMobileMenuOpen(false)
+        menuButtonRef.current?.focus()
+      }
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      document.body.style.overflow = previousOverflow
+    }
+  }, [mobileMenuOpen])
+
+  const closeMobileMenu = () => setMobileMenuOpen(false)
+
   return (
     <header className={`kw-navbar ${scrolled ? 'kw-navbar--scrolled' : ''}`}>
-      <div className="landing-container kw-navbar-inner">
-        <Logo light />
+      <div className="landing-container kw-navbar-shell">
+        <div className="kw-navbar-inner">
+          <a href="#product" className="kw-brand-link" aria-label="Keywall home">
+            <Logo light />
+          </a>
 
-        <nav className="kw-nav-links" aria-label="Main Navigation">
-          <a href="#product" className="kw-nav-link">Product</a>
-          <a href="#security" className="kw-nav-link">Security</a>
-          <a href="#docs" className="kw-nav-link">Docs</a>
-          <a href="#enterprise" className="kw-nav-link">Enterprise</a>
-          <a href="#pricing" className="kw-nav-link">Pricing</a>
-          <a href="/app" className="kw-nav-link">Sign in</a>
-          <a href="#beta" className="kw-nav-link">Beta status</a>
-          <PrimaryButton href="/app" icon={<ArrowRight size={15} />}>
-            {brand.copy.launchCta}
-          </PrimaryButton>
-        </nav>
+          <nav className="kw-nav-links" aria-label="Main navigation">
+            <a href="#security" className="kw-nav-link">Security</a>
+            <a href="#flow" className="kw-nav-link">How it works</a>
+            <a href="#privacy" className="kw-nav-link">Privacy</a>
+            <a href="#beta" className="kw-nav-link">Beta status</a>
+          </nav>
 
-        <button
-          className="kw-mobile-menu-btn"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Toggle navigation menu"
-        >
-          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+          <div className="kw-nav-actions">
+            <a href="/app" className="kw-nav-link">Sign in</a>
+            <PrimaryButton href="/app" icon={<ArrowRight size={15} />}>
+              {brand.copy.launchCta}
+            </PrimaryButton>
+          </div>
+
+          <button
+            ref={menuButtonRef}
+            type="button"
+            className="kw-mobile-menu-btn"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="kw-mobile-navigation"
+          >
+            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
 
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
+              id="kw-mobile-navigation"
               className="kw-mobile-menu"
               initial={prefersReducedMotion ? false : { opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.25, ease: easeOut }}
             >
-              <a href="#product" onClick={() => setMobileMenuOpen(false)}>Product</a>
-              <a href="#security" onClick={() => setMobileMenuOpen(false)}>Security</a>
-              <a href="#docs" onClick={() => setMobileMenuOpen(false)}>Docs</a>
-              <a href="#enterprise" onClick={() => setMobileMenuOpen(false)}>Enterprise</a>
-              <a href="#pricing" onClick={() => setMobileMenuOpen(false)}>Pricing</a>
-              <a href="/app" onClick={() => setMobileMenuOpen(false)}>Sign in</a>
-              <a href="#beta" onClick={() => setMobileMenuOpen(false)}>Beta status</a>
-              <PrimaryButton href="/app" icon={<ArrowRight size={15} />}>
-                {brand.copy.launchCta}
-              </PrimaryButton>
+              <nav aria-label="Mobile navigation">
+                <a ref={firstMobileLinkRef} href="#security" onClick={closeMobileMenu}>Security</a>
+                <a href="#flow" onClick={closeMobileMenu}>How it works</a>
+                <a href="#privacy" onClick={closeMobileMenu}>Privacy</a>
+                <a href="#beta" onClick={closeMobileMenu}>Beta status</a>
+              </nav>
+              <div className="kw-mobile-menu-actions">
+                <PrimaryButton href="/app" variant="secondary" onClick={closeMobileMenu}>Sign in</PrimaryButton>
+                <PrimaryButton href="/app?mode=register" icon={<ArrowRight size={15} />} onClick={closeMobileMenu}>
+                  {brand.copy.createAccountCta}
+                </PrimaryButton>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

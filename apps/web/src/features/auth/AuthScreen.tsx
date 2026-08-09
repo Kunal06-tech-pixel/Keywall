@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Check, Eye, EyeOff, KeyRound, ShieldCheck, User } from 'lucide-react'
 import { brand } from '@keywall/brand'
 import type { SyncMutation } from '@keywall/contracts'
@@ -10,7 +10,6 @@ import { hasLegacyVault, removeLegacyVault, unlockLegacyVault } from '../../lega
 import { Logo } from '../../ui/Logo'
 import { RecoveryDialog } from '../recovery/RecoveryDialog'
 import { MfaChallenge } from './MfaChallenge'
-import { LockStatus3D } from '../../components/3d/LockStatus3D'
 
 type AuthMode = 'login' | 'register'
 
@@ -25,6 +24,7 @@ export function AuthScreen({ initialMode = 'login', onUnlock }: { initialMode?: 
   const [verification, setVerification] = useState('')
   const [registration, setRegistration] = useState<Awaited<ReturnType<typeof vaultCrypto.register>> | null>(null)
   const [mfaChallenge, setMfaChallenge] = useState<MfaLoginChallenge | null>(null)
+  const prefersReducedMotion = useReducedMotion()
 
   useEffect(() => {
     const token = new URLSearchParams(location.search).get('token')
@@ -118,28 +118,26 @@ export function AuthScreen({ initialMode = 'login', onUnlock }: { initialMode?: 
   if (mfaChallenge) return <main className="auth-shell production-auth"><div className="auth-brand"><Logo light /></div><MfaChallenge challenge={mfaChallenge} onCancel={() => { setMfaChallenge(null); void vaultCrypto.lock() }} onComplete={async (session) => { await vaultCrypto.unlock(session.wrappedVaultKey); await migrateLegacy(); onUnlock(session.email) }} /></main>
 
   return <main className="auth-shell production-auth">
-    <div className="auth-brand"><Logo light /></div>
-    <section className="auth-card production-auth-card">
-      <div className="auth-icon"><LockStatus3D isLocked={true} size={54} /></div>
-      <p className="eyebrow">Zero-knowledge security</p>
-      <h1>{mode === 'register' ? 'Create your encrypted vault' : `Unlock ${brand.productName}`}</h1>
-      <p className="auth-copy">{mode === 'register' ? 'Your master password creates keys on this device. We never receive it or your vault key.' : 'Authenticate and decrypt your synchronized vault on this device.'}</p>
-      <div className="auth-tabs" role="tablist">
-        <button className={mode === 'login' ? 'active' : ''} onClick={() => { setMode('login'); setError('') }}>Sign in</button>
-        <button className={mode === 'register' ? 'active' : ''} onClick={() => { setMode('register'); setError('') }}>Create account</button>
+    <section className="auth-card production-auth-card modern-auth-card">
+      <a className="auth-home-link" href="/" aria-label="Return to Keywall landing page">
+        <Logo light />
+      </a>
+      <div className="auth-heading">
+        <h1>{mode === 'register' ? 'Create your encrypted vault' : `Sign in to ${brand.productName}`}</h1>
+        <p className="auth-copy">{mode === 'register' ? 'Create your account and encrypt the first vault key on this device.' : 'Unlock and decrypt your synchronized vault on this device.'}</p>
       </div>
       <form onSubmit={submit}>
         <label className="field-label" htmlFor="email">Email address</label>
         <div className="input-wrap"><User size={18} /><input id="email" name="username" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" autoComplete="username" required /></div>
-        <label className="field-label" htmlFor="master">Master password</label>
+        <label className="field-label" htmlFor="master">Master password {mode === 'login' && <a href="/recover">Forgot password?</a>}</label>
         <div className="input-wrap"><KeyRound size={18} /><input id="master" type={showPassword ? 'text' : 'password'} value={masterPassword} onChange={(event) => setMasterPassword(event.target.value)} placeholder="At least 12 characters" autoComplete={mode === 'register' ? 'new-password' : 'current-password'} required /><button type="button" className="icon-button subtle" onClick={() => setShowPassword((value) => !value)}>{showPassword ? <EyeOff size={17} /> : <Eye size={17} />}</button></div>
         <AnimatePresence>
           {mode === 'register' && (
             <motion.div
-              initial={{ height: 0, opacity: 0 }}
+              initial={prefersReducedMotion ? false : { height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.25 }}
+              transition={{ duration: prefersReducedMotion ? 0 : 0.25 }}
               style={{ overflow: 'hidden' }}
             >
               <label className="field-label" htmlFor="confirm">Confirm master password</label>
@@ -151,7 +149,12 @@ export function AuthScreen({ initialMode = 'login', onUnlock }: { initialMode?: 
         {error && <p className="form-error" role="alert">{error}</p>}
         <button className="primary-button full" disabled={busy || !email || masterPassword.length < 12 || (mode === 'register' && masterPassword !== confirmPassword)}>{busy ? 'Securing your session...' : mode === 'register' ? 'Create zero-knowledge account' : 'Unlock vault'}</button>
       </form>
-      {mode === 'login' && <a className="forgot-link" href="/recover">Forgot your master password?</a>}
+      <p className="auth-mode-switch">
+        {mode === 'login' ? "Don't have an account?" : 'Already have an account?'}
+        <button type="button" onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError('') }}>
+          {mode === 'login' ? 'Create account' : 'Sign in'}
+        </button>
+      </p>
       <div className="auth-note"><ShieldCheck size={16} /> Argon2id / AES-256-GCM / Keys stay on your device</div>
     </section>
     {registration && <RecoveryDialog recoveryKey={registration.recoveryKey} onDone={() => void finishRegistration()} />}
