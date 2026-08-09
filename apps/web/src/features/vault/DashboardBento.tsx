@@ -17,7 +17,7 @@ function useFinePointer() {
   const [isFinePointer, setIsFinePointer] = useState(false)
 
   useEffect(() => {
-    const query = window.matchMedia('(pointer: fine) and (hover: hover)')
+    const query = window.matchMedia('(pointer: fine) and (hover: hover) and (min-width: 769px)')
     const update = () => setIsFinePointer(query.matches)
 
     update()

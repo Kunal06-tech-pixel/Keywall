@@ -1,4 +1,5 @@
 import type { CustomField, RecoveryCodeItem } from '@keywall/contracts'
+import { useId } from 'react'
 import type { FieldTemplate } from './vault-item-templates'
 import { formatCardNumber } from './vault-item-validation'
 import { SecretInput } from './SecretInput'
@@ -13,12 +14,13 @@ export function DynamicFieldRenderer({ field, value, onChange }: {
   value: unknown
   onChange: (value: unknown) => void
 }) {
+  const fieldId = useId()
   const label = <span className="field-label">{field.label}{field.required && <em>Required</em>}</span>
   if (field.kind === 'textarea') {
     return <label className={field.fullWidth ? 'form-span' : ''}>{label}<textarea rows={5} value={stringValue(value)} onChange={(event) => onChange(event.target.value)} placeholder={field.placeholder} required={field.required} /></label>
   }
   if (field.kind === 'secret') {
-    return <label className={field.fullWidth ? 'form-span' : ''}>{label}<SecretInput value={stringValue(value)} onChange={onChange as (value: string) => void} placeholder={field.placeholder} required={field.required} /></label>
+    return <div className={`form-field-group ${field.fullWidth ? 'form-span' : ''}`.trim()}><label className="field-label" htmlFor={fieldId}>{field.label}{field.required && <em>Required</em>}</label><SecretInput id={fieldId} value={stringValue(value)} onChange={onChange as (value: string) => void} placeholder={field.placeholder} required={field.required} /></div>
   }
   if (field.kind === 'select') {
     return (

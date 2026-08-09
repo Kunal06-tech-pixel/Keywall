@@ -81,7 +81,7 @@ async function registerVault(page: Page, suffix: string) {
 }
 
 async function openAddItem(page: Page) {
-  await page.getByRole('button', { name: /^Add item$/i }).click()
+  await page.getByRole('button', { name: /^New item$/i }).click()
   await expect(page.getByRole('dialog', { name: /add secure item/i })).toBeVisible()
 }
 
@@ -117,9 +117,9 @@ test.describe('Keywall vault item refinement', () => {
     await page.locator('label.compact-toggle').filter({ hasText: 'Sensitive' }).click()
     await page.getByRole('button', { name: /encrypt and save/i }).click()
 
-    const row = page.locator('.production-row').filter({ hasText: 'Deployment bundle' })
+    const row = page.locator('.dashboard-item-row, .production-row').filter({ hasText: 'Deployment bundle' })
     await expect(row).toBeVisible()
-    await row.click()
+    await row.getByRole('button').first().click()
     await expect(page.locator('.production-detail')).toContainText('Custom Secret')
     await expect(page.locator('.production-detail')).toContainText('************')
     await expect(page.locator('.production-detail')).not.toContainText('super-secret-token')
@@ -133,14 +133,14 @@ test.describe('Keywall vault item refinement', () => {
     await page.getByRole('button', { name: 'Edit' }).click()
     await page.getByPlaceholder('e.g. Private deployment bundle').fill('Deployment bundle updated')
     await page.getByRole('button', { name: /encrypt and save/i }).click()
-    await expect(page.locator('.production-row').filter({ hasText: 'Deployment bundle updated' })).toBeVisible()
+    await expect(page.locator('.dashboard-item-row, .production-row').filter({ hasText: 'Deployment bundle updated' })).toBeVisible()
 
     page.once('dialog', (dialog) => void dialog.accept())
     await page.getByRole('button', { name: 'Delete' }).click()
     await expect(page.getByRole('dialog', { name: /confirm master password/i })).toBeVisible()
     await page.getByPlaceholder('Master password').fill(masterPassword)
     await page.getByRole('button', { name: /^Confirm$/ }).click()
-    await expect(page.locator('.production-row').filter({ hasText: 'Deployment bundle updated' })).toHaveCount(0)
+    await expect(page.locator('.dashboard-item-row, .production-row').filter({ hasText: 'Deployment bundle updated' })).toHaveCount(0)
   })
 })
 
@@ -149,12 +149,13 @@ test.describe('Keywall responsive add-item modal', () => {
 
   test('keeps the type selector usable on mobile', async ({ page }) => {
     await registerVault(page, 'mobile')
-    await page.getByRole('button', { name: /^Add item$/i }).click()
+    await page.getByRole('button', { name: /^New item$/i }).click()
     const dialog = itemEditor(page)
     await expect(dialog).toBeVisible()
     await expect(dialog.getByRole('button', { name: /Payment Card/i })).toBeVisible()
     await dialog.getByRole('button', { name: /Payment Card/i }).click()
     await expect(dialog.getByText('Cardholder name', { exact: false })).toBeVisible()
     await expect(dialog.getByRole('button', { name: /back to item types/i })).toBeVisible()
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false)
   })
 })

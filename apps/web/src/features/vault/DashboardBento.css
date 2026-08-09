@@ -119,6 +119,10 @@
   .production-shell .dashboard-summary-grid .dashboard-bento-card { grid-column: span 12; }
 }
 
+@media (max-width: 768px) {
+  .production-shell .dashboard-bento-spotlight { display: none; }
+}
+
 @media (pointer: coarse), (prefers-reduced-motion: reduce) {
   .production-shell .dashboard-bento-spotlight,
   .production-shell .dashboard-bento-card::after {

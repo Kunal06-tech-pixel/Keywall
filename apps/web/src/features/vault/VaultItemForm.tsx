@@ -50,8 +50,12 @@ export function VaultItemForm({ type, existing, name, setName, category, setCate
     })
   }
 
-  return <form onSubmit={submit}>
-    <div className="editor-type-row">
+  return <form className="vault-item-form" onSubmit={submit}>
+    <section className="editor-section editor-identity-section" aria-labelledby="item-identity-heading">
+      <div className="editor-section-heading">
+        <div><h3 id="item-identity-heading">Item identity</h3><p>Name and group this record inside your vault.</p></div>
+      </div>
+      <div className="editor-type-row">
       <label><span className="field-label">{template.titleLabel}<em>Required</em></span><input value={name} onChange={(event) => setName(event.target.value)} placeholder={template.titlePlaceholder} required autoFocus /></label>
       <label>
         <span className="field-label">Category</span>
@@ -64,16 +68,30 @@ export function VaultItemForm({ type, existing, name, setName, category, setCate
           <span className="select-arrow" aria-hidden="true">▾</span>
         </div>
       </label>
-    </div>
-    <div className="editor-section"><h3>{template.label} details</h3><div className="editor-grid">
+      </div>
+    </section>
+    <section className="editor-section editor-details-section" aria-labelledby="item-details-heading">
+      <div className="editor-section-heading">
+        <div><h3 id="item-details-heading">{template.label} details</h3><p>Store the fields you need for this secure record.</p></div>
+      </div>
+      <div className="editor-grid">
       {template.fields.map((field) => <DynamicFieldRenderer key={field.key} field={field} value={fields[field.key]} onChange={(value) => updateField(field.key, value)} />)}
-    </div></div>
-    <div className="editor-section"><h3>Organisation</h3><div className="editor-grid">
+      </div>
+    </section>
+    <section className="editor-section editor-organisation-section" aria-labelledby="item-organisation-heading">
+      <div className="editor-section-heading">
+        <div><h3 id="item-organisation-heading">Organisation</h3><p>Add optional context for faster retrieval.</p></div>
+      </div>
+      <div className="editor-grid">
       <label><span className="field-label">Tags</span><input value={tags} onChange={(event) => setTags(event.target.value)} placeholder="work, finance (comma separated)" /></label>
-      <label className="favorite-toggle"><input type="checkbox" checked={favorite} onChange={(event) => setFavorite(event.target.checked)} /><span className="custom-check"><Check size={13} /></span>Add to favourites</label>
-    </div></div>
+      <label className="favorite-toggle"><input type="checkbox" checked={favorite} onChange={(event) => setFavorite(event.target.checked)} /><span className="custom-check"><Check size={13} /></span><span>Add to favourites</span></label>
+      </div>
+    </section>
     {error && <p className="form-error" role="alert">{error}</p>}
-    <div className="modal-actions"><button className="primary-button"><ShieldCheck size={16} /> Encrypt and save</button></div>
+    <div className="modal-actions editor-modal-actions">
+      <div className="editor-save-context"><small>Saving as</small><strong>{template.label}</strong></div>
+      <button className="primary-button"><ShieldCheck size={16} /> Encrypt and save</button>
+    </div>
   </form>
 }
 

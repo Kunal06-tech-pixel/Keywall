@@ -1,7 +1,8 @@
 import { Clipboard, Eye, EyeOff, X } from 'lucide-react'
 import { useState } from 'react'
 
-export function SecretInput({ value, onChange, placeholder, required, onCopy }: {
+export function SecretInput({ id, value, onChange, placeholder, required, onCopy }: {
+  id?: string | undefined
   value: string
   onChange: (value: string) => void
   placeholder?: string | undefined
@@ -11,6 +12,7 @@ export function SecretInput({ value, onChange, placeholder, required, onCopy }: 
   const [revealed, setRevealed] = useState(false)
   return <div className="password-field">
     <input
+      id={id}
       type={revealed ? 'text' : 'password'}
       value={value}
       onChange={(event) => onChange(event.target.value)}
