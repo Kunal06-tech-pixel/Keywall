@@ -60,8 +60,18 @@ async function registerVault(page: Page, suffix: string) {
   await page.getByLabel('Email address').fill(email)
   await page.getByLabel('Master password', { exact: true }).fill(masterPassword)
   await page.getByLabel('Confirm master password').fill(masterPassword)
-  await page.getByRole('button', { name: /create zero-knowledge account/i }).click()
-  await expect(page.getByRole('dialog', { name: /save this key offline/i })).toBeVisible()
+  const createAccount = page.getByRole('button', { name: /create zero-knowledge account/i })
+  await createAccount.click()
+  const recoveryDialog = page.getByRole('dialog', { name: /save this key offline/i })
+  const registrationError = page.getByRole('alert')
+  await expect(
+    recoveryDialog.or(registrationError),
+    'Registration should show either the recovery dialog or an actionable form error.',
+  ).toBeVisible({ timeout: 30_000 })
+  if (await registrationError.isVisible()) {
+    throw new Error(`Registration failed before the recovery dialog appeared: ${await registrationError.innerText()}`)
+  }
+  await expect(recoveryDialog).toBeVisible()
   await page.locator('label.recovery-confirm').click()
   await page.getByRole('button', { name: /continue to my vault/i }).click()
   const vaultHeading = page.getByRole('heading', { name: /all items/i })
@@ -75,7 +85,7 @@ async function registerVault(page: Page, suffix: string) {
   await page.goto(`/verify-email?token=${encodeURIComponent(token)}`)
   await expect(page.getByText(/email verified/i)).toBeVisible()
   await page.getByLabel('Email address').fill(email)
-  await page.getByLabel('Master password', { exact: true }).fill(masterPassword)
+  await page.getByLabel(/^Master password/).fill(masterPassword)
   await page.getByRole('button', { name: /unlock vault/i }).click()
   await expect(vaultHeading).toBeVisible()
 }
