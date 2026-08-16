@@ -7,8 +7,10 @@ export const productionCsp = [
   // Some browsers still gate that behind unsafe-eval despite wasm-unsafe-eval.
   "script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval'",
   "worker-src 'self' blob:",
-  "style-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://db.onlinewebfonts.com",
+  "font-src 'self' https://fonts.gstatic.com https://db.onlinewebfonts.com",
   "img-src 'self' data: blob:",
+  "media-src 'self' https://d8j0ntlcm91z4.cloudfront.net",
   "connect-src 'self' http://localhost:3001 http://127.0.0.1:3001",
   "object-src 'none'",
   "base-uri 'none'",

@@ -1,0 +1,613 @@
+@font-face {
+  font-family: 'Geist Pixel Circle';
+  src: url('/assets/fonts/GeistPixel-Circle.woff2') format('woff2');
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+}
+
+:root {
+  --color-obsidian: #000;
+  --color-mint: #fff;
+  --color-mint-strong: #ececec;
+  --color-mint-soft: rgba(255, 255, 255, .08);
+  --color-mint-line: rgba(255, 255, 255, .34);
+  --surface-0: #000;
+  --surface-1: #060606;
+  --surface-2: #0c0c0c;
+  --surface-3: #151515;
+  --surface-raised: #090909;
+  --border: rgba(255, 255, 255, .11);
+  --border-strong: rgba(255, 255, 255, .21);
+  --border-focus: rgba(255, 255, 255, .78);
+  --text: #fff;
+  --text-secondary: #d0d0d0;
+  --text-muted: #969696;
+  --text-dim: #686868;
+  --success: #9be2b7;
+  --shadow-glow: 0 0 28px rgba(255, 255, 255, .09);
+  --display-font: 'Geist Pixel Circle', 'Courier New', monospace;
+  --body-font: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+body:not(.landing-viewport) {
+  color: var(--text);
+  background: #000;
+  font-family: var(--body-font);
+}
+
+body:not(.landing-viewport) :is(
+  .auth-heading h1,
+  .auth-card > h1,
+  .vault-heading h1,
+  .dashboard-card-value,
+  .card-metric-val,
+  .security-score,
+  .modal-heading h2,
+  .detail-identity h2,
+  .empty-state h2
+) {
+  font-family: var(--display-font);
+  font-weight: 400;
+  letter-spacing: -.045em;
+}
+
+/* Authentication and account recovery */
+.production-auth {
+  background:
+    radial-gradient(circle at 50% 28%, rgba(255, 255, 255, .055), transparent 34%),
+    #000;
+}
+
+.production-auth::before {
+  opacity: .62;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, .15) 1px, transparent 1.35px);
+  background-size: 24px 24px;
+  mask-image: linear-gradient(to bottom, #000 0, rgba(0, 0, 0, .74) 52%, transparent 92%);
+  animation: none;
+}
+
+.production-auth .auth-card,
+.production-auth .production-auth-card,
+.production-auth .modern-auth-card {
+  border: 1px solid rgba(255, 255, 255, .17);
+  background: rgba(7, 7, 7, .96);
+  box-shadow: 0 26px 80px rgba(0, 0, 0, .72), 0 0 38px rgba(255, 255, 255, .045);
+}
+
+.production-auth .modern-auth-card::before {
+  background: linear-gradient(110deg, transparent 18%, rgba(255, 255, 255, .08), transparent 72%);
+}
+
+.production-auth .auth-heading h1,
+.production-auth .auth-card > h1 {
+  color: #fff;
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  line-height: 1.02;
+}
+
+.production-auth :is(.logo-mark, .auth-icon) {
+  color: #050505;
+  border-color: rgba(255, 255, 255, .82);
+  background: #fff;
+  box-shadow: 0 0 20px rgba(255, 255, 255, .12);
+}
+
+.production-auth .logo-word,
+.production-auth .logo-word span,
+.production-auth .eyebrow {
+  color: #fff;
+}
+
+.production-auth .auth-copy,
+.production-auth .auth-note,
+.production-auth .auth-footer {
+  color: var(--text-muted);
+}
+
+.production-auth .field-label {
+  color: #c5c5c5;
+}
+
+.production-auth :is(.input-wrap, .password-field),
+.production-auth input:not([type='checkbox']) {
+  color: #fff;
+  border-color: rgba(255, 255, 255, .16);
+  background: #050505;
+}
+
+.production-auth :is(.input-wrap, .password-field):hover {
+  border-color: rgba(255, 255, 255, .3);
+}
+
+.production-auth :is(.input-wrap, .password-field):focus-within {
+  border-color: rgba(255, 255, 255, .74);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, .085);
+}
+
+.production-auth .primary-button.full {
+  color: #050505;
+  border-color: #fff;
+  background: #fff;
+  box-shadow: 0 12px 34px rgba(255, 255, 255, .1);
+}
+
+.production-auth .primary-button.full:hover:not(:disabled) {
+  color: #000;
+  background: #ececec;
+  box-shadow: 0 14px 38px rgba(255, 255, 255, .16);
+}
+
+.production-auth .primary-button.full:disabled {
+  color: #686868;
+  border-color: rgba(255, 255, 255, .08);
+  background: #171717;
+  box-shadow: none;
+}
+
+.production-auth :is(.auth-mode-switch, .forgot-link, .auth-home-link) {
+  color: #fff;
+}
+
+/* Authenticated application shell */
+.production-shell {
+  --bento-glow: 255, 255, 255;
+  color: var(--text);
+  background: #000;
+}
+
+.production-shell .topbar {
+  border-color: rgba(255, 255, 255, .11);
+  background: rgba(4, 4, 4, .96);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .025);
+  backdrop-filter: blur(18px);
+}
+
+.production-shell :is(.topbar, .sidebar) .logo-mark {
+  color: #050505;
+  border-color: #fff;
+  background: #fff;
+  box-shadow: 0 0 18px rgba(255, 255, 255, .1);
+}
+
+.production-shell .top-search {
+  color: var(--text-muted);
+  border-color: rgba(255, 255, 255, .12);
+  background: #0a0a0a;
+}
+
+.production-shell .top-search:focus-within {
+  border-color: rgba(255, 255, 255, .56);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, .06);
+}
+
+.production-shell .top-search kbd {
+  color: #8d8d8d;
+  border-color: rgba(255, 255, 255, .13);
+  background: #151515;
+}
+
+.production-shell .primary-button,
+.production-shell :is(.add-button, .add-cta) {
+  color: #050505;
+  border-color: #fff;
+  background: #fff;
+  box-shadow: 0 8px 28px rgba(255, 255, 255, .08);
+}
+
+.production-shell .primary-button:hover:not(:disabled),
+.production-shell :is(.add-button, .add-cta):hover:not(:disabled) {
+  color: #000;
+  border-color: #fff;
+  background: #e9e9e9;
+  box-shadow: 0 10px 30px rgba(255, 255, 255, .14);
+}
+
+.production-shell :is(.icon-button, .secondary-button, .lock-button, .generator-button) {
+  border-color: rgba(255, 255, 255, .12);
+  background: #0a0a0a;
+}
+
+.production-shell :is(.icon-button, .secondary-button, .generator-button):hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, .28);
+  background: #171717;
+}
+
+.production-shell .workspace,
+.production-shell .vault-main {
+  background: #000;
+}
+
+.production-shell .vault-heading .heading-sub {
+  color: #929292;
+}
+
+.production-shell .sidebar {
+  border-color: rgba(255, 255, 255, .1);
+  background: #050505;
+}
+
+.production-shell .sidebar nav button,
+.production-shell .sidebar-dock-item {
+  color: #a4a4a4;
+  border: 1px solid transparent;
+  background: transparent;
+}
+
+.production-shell .sidebar nav button:hover,
+.production-shell .sidebar-dock-item:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, .09);
+  background: rgba(255, 255, 255, .055);
+}
+
+.production-shell .sidebar nav button.active,
+.production-shell .sidebar-dock-item.active,
+.production-shell .nav-group .nav-item.active {
+  color: #050505;
+  border-color: #fff;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(255, 255, 255, .075);
+}
+
+.production-shell .sidebar nav button.active span {
+  color: #4a4a4a;
+}
+
+.production-shell .nav-group .nav-label {
+  color: #777;
+}
+
+.production-shell .nav-group .nav-item.active :is(svg, .nav-count) {
+  color: #050505;
+}
+
+.production-shell .sidebar nav button::before,
+.production-shell .sidebar-dock-item::after {
+  background: #fff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, .38);
+}
+
+.production-shell .sidebar nav button.active::before,
+.production-shell .sidebar-dock-item.active::after {
+  background: #0a0a0a;
+  box-shadow: none;
+}
+
+.production-shell .sidebar-dock-item:focus-visible {
+  outline-color: rgba(255, 255, 255, .84);
+}
+
+.production-shell .sidebar-security {
+  border-color: rgba(255, 255, 255, .12);
+  background: linear-gradient(145deg, rgba(255, 255, 255, .055), rgba(255, 255, 255, .018));
+}
+
+.production-shell .sidebar-security > svg,
+.production-shell .vault-footer svg {
+  color: #fff;
+}
+
+.production-shell .sidebar-security i {
+  background: #fff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, .38);
+}
+
+/* Dashboard, lists, cards, and setup panels */
+.production-shell :is(
+  .dashboard-card,
+  .metrics-hero-card,
+  .summary-card,
+  .dashboard-summary-card,
+  .dashboard-panel,
+  .vault-list,
+  .setup-card,
+  .security-card,
+  .activity-panel,
+  .recent-panel,
+  .health-card,
+  .sync-card
+) {
+  border-color: rgba(255, 255, 255, .115);
+  background: linear-gradient(145deg, #0b0b0b, #060606);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .025);
+}
+
+.production-shell :is(.dashboard-card, .summary-card, .dashboard-summary-card, .dashboard-panel):hover {
+  border-color: rgba(255, 255, 255, .23);
+}
+
+.production-shell :is(.dashboard-card, .metrics-hero-card, .dashboard-panel):hover {
+  border-color: rgba(255, 255, 255, .23);
+}
+
+.production-shell .dashboard-bento-card::before {
+  background: radial-gradient(
+    190px circle at var(--bento-glow-x) var(--bento-glow-y),
+    rgba(255, 255, 255, .72),
+    rgba(255, 255, 255, .2) 38%,
+    transparent 72%
+  );
+}
+
+.production-shell .dashboard-bento-card::after,
+.production-shell .dashboard-bento-spotlight {
+  background: radial-gradient(circle at var(--bento-glow-x, 50%) var(--bento-glow-y, 50%), rgba(255, 255, 255, .105), transparent 70%);
+}
+
+.production-shell :is(.dashboard-card-value, .card-metric-val, .security-score) {
+  color: #fff;
+}
+
+.production-shell :is(.dashboard-icon, .summary-icon, .card-icon, .activity-icon, .setup-icon) {
+  color: #fff;
+  border-color: rgba(255, 255, 255, .12);
+  background: rgba(255, 255, 255, .07);
+}
+
+.production-shell :is(.entry-row, .activity-row, .session-row) {
+  border-color: rgba(255, 255, 255, .08);
+}
+
+.production-shell :is(.entry-row, .activity-row, .session-row):hover,
+.production-shell .entry-row.selected {
+  background: rgba(255, 255, 255, .045);
+}
+
+.production-shell .entry-row.selected::before,
+.production-shell .category-dot {
+  background: #fff;
+  box-shadow: 0 0 9px rgba(255, 255, 255, .26);
+}
+
+.production-shell :is(.site-avatar, .detail-avatar) {
+  color: #fff;
+  border-color: rgba(255, 255, 255, .15);
+  background: #171717;
+}
+
+.production-shell :is(.progress-fill, .setup-progress-fill, .health-progress, .strength-bars i) {
+  background: #fff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, .18);
+}
+
+.production-shell .health-ring {
+  filter: grayscale(1);
+}
+
+.production-shell .health-ring::after {
+  background: #090909;
+}
+
+.production-shell .setup-complete,
+.production-shell .status-pill,
+.production-shell .current-pill {
+  color: #ededed;
+  border-color: rgba(255, 255, 255, .17);
+  background: rgba(255, 255, 255, .075);
+}
+
+.production-shell .score-badge.good,
+.production-shell .live-status-pill {
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, .16);
+  background: rgba(255, 255, 255, .08);
+}
+
+.production-shell :is(.panel-header-icon, .dashboard-table-footer svg, .dashboard-empty-state svg) {
+  color: #fff;
+}
+
+.production-shell .dashboard-item-row:hover {
+  background: rgba(255, 255, 255, .045);
+}
+
+.production-shell .security-dot {
+  background: #fff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, .36);
+}
+
+.production-shell .dashboard-item-row .favorite-action-btn:is(:hover, .is-favorite) {
+  color: #fff;
+}
+
+.production-shell .getting-started-panel .panel-sub {
+  color: #b8b8b8;
+}
+
+.production-shell .setup-progress span {
+  background: #fff;
+  box-shadow: 0 0 9px rgba(255, 255, 255, .16);
+}
+
+.production-shell .setup-step.is-complete .setup-check {
+  color: #050505;
+  border-color: #fff;
+  background: #fff;
+}
+
+.production-shell .dashboard-setup-link {
+  color: #fff;
+  border-color: rgba(255, 255, 255, .2);
+  background: rgba(255, 255, 255, .055);
+}
+
+.production-shell .dashboard-setup-link:hover {
+  color: #050505;
+  border-color: #fff;
+  background: #fff;
+}
+
+.production-shell .dashboard-items-panel > .dashboard-empty-state svg {
+  color: #fff;
+}
+
+/* Dialogs, details, settings, and every item editor */
+.production-shell .modal-backdrop {
+  background: rgba(0, 0, 0, .82);
+  backdrop-filter: blur(10px);
+}
+
+.production-shell .item-editor-backdrop {
+  background:
+    radial-gradient(circle at 50% 12%, rgba(255, 255, 255, .065), transparent 32%),
+    rgba(0, 0, 0, .86);
+  backdrop-filter: blur(18px) saturate(.8);
+}
+
+.production-shell :is(.modal, .detail-panel, .context-menu) {
+  color: var(--text);
+  border-color: rgba(255, 255, 255, .16);
+  background: #080808;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, .82), 0 0 30px rgba(255, 255, 255, .035);
+}
+
+.production-shell .entry-modal {
+  border-color: rgba(255, 255, 255, .17);
+  background:
+    radial-gradient(circle at 82% 0, rgba(255, 255, 255, .055), transparent 28%),
+    linear-gradient(155deg, #0b0b0b, #070707);
+  scrollbar-color: rgba(255, 255, 255, .26) transparent;
+}
+
+.production-shell .entry-modal::before {
+  background: linear-gradient(180deg, #fff, rgba(255, 255, 255, .14) 62%, transparent);
+}
+
+.production-shell :is(.modal-heading, .detail-top, .detail-footer, .modal-actions) {
+  border-color: rgba(255, 255, 255, .1);
+  background: rgba(8, 8, 8, .96);
+}
+
+.production-shell .entry-modal .modal-heading {
+  background:
+    radial-gradient(circle at 90% 0, rgba(255, 255, 255, .07), transparent 36%),
+    #080808;
+}
+
+.production-shell .entry-modal .eyebrow {
+  color: #fff;
+}
+
+.production-shell :is(.editor-heading-icon, .settings-icon) {
+  color: #fff;
+  border-color: rgba(255, 255, 255, .15);
+  background: #151515;
+  box-shadow: none;
+}
+
+.production-shell .editor-security-strip {
+  color: #aaa;
+  border-color: rgba(255, 255, 255, .13);
+  background: linear-gradient(90deg, rgba(255, 255, 255, .065), rgba(255, 255, 255, .018));
+}
+
+.production-shell .editor-security-strip svg,
+.production-shell .entry-modal .field-label em {
+  color: #fff;
+}
+
+.production-shell .entry-modal .editor-section,
+.production-shell .entry-modal .editor-identity-section,
+.production-shell .entry-modal .editor-organisation-section,
+.production-shell :is(.encryption-card, .account-deletion, .check-option, .favorite-toggle, .custom-field-row, .nested-secret-list > div) {
+  border-color: rgba(255, 255, 255, .11);
+  background: linear-gradient(145deg, #0d0d0d, #080808);
+}
+
+.production-shell :is(
+  input:not([type='checkbox']):not([type='range']),
+  textarea,
+  select,
+  .input-wrap,
+  .password-field
+) {
+  color: #fff;
+  border-color: rgba(255, 255, 255, .15);
+  background-color: #050505;
+}
+
+.production-shell .entry-modal :is(
+  input:not([type='checkbox']):not([type='range']),
+  textarea,
+  select,
+  .password-field
+) {
+  border-color: rgba(255, 255, 255, .15);
+  background: #050505;
+}
+
+.production-shell :is(input, textarea, select):hover,
+.production-shell .password-field:hover {
+  border-color: rgba(255, 255, 255, .28);
+}
+
+.production-shell :is(input, textarea, select):focus,
+.production-shell .password-field:focus-within,
+.production-shell .entry-modal :is(input, textarea, select):focus,
+.production-shell .entry-modal .password-field:focus-within {
+  border-color: rgba(255, 255, 255, .7);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, .075);
+}
+
+.production-shell .entry-modal input:-webkit-autofill,
+.production-shell .entry-modal input:-webkit-autofill:hover,
+.production-shell .entry-modal input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #fff;
+  -webkit-box-shadow: 0 0 0 1000px #050505 inset;
+  caret-color: #fff;
+}
+
+.production-shell .custom-check {
+  border-color: rgba(255, 255, 255, .2);
+  background: #050505;
+}
+
+.production-shell input:checked + .custom-check,
+.production-shell .custom-check.checked {
+  color: #000;
+  border-color: #fff;
+  background: #fff;
+}
+
+.production-shell .entry-modal .favorite-toggle:hover,
+.production-shell .entry-modal .favorite-toggle:focus-within,
+.production-shell .entry-modal .item-type-option:hover,
+.production-shell .entry-modal .item-type-option:focus-visible {
+  color: #fff;
+  border-color: rgba(255, 255, 255, .34);
+  background: #141414;
+}
+
+.production-shell .entry-modal .item-type-option {
+  border-color: rgba(255, 255, 255, .12);
+  background: linear-gradient(145deg, #0d0d0d, #070707);
+}
+
+.production-shell .entry-modal .item-type-option:focus-visible {
+  outline-color: rgba(255, 255, 255, .78);
+}
+
+.production-shell .entry-modal .editor-modal-actions {
+  border-color: rgba(255, 255, 255, .1);
+  background: linear-gradient(180deg, rgba(8, 8, 8, .91), #080808 30%);
+}
+
+.production-shell .toast {
+  color: #fff;
+  border-color: rgba(255, 255, 255, .17);
+  background: #0b0b0b;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .7);
+}
+
+@media (max-width: 650px) {
+  .production-auth .auth-heading h1,
+  .production-auth .auth-card > h1 {
+    font-size: 1.7rem;
+  }
+
+  .production-shell .sidebar {
+    background: rgba(4, 4, 4, .98);
+  }
+}
