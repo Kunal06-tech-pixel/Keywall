@@ -16,6 +16,7 @@
       Cross-Origin-Opener-Policy "same-origin"
       Cross-Origin-Embedder-Policy "require-corp"
       Cross-Origin-Resource-Policy "same-origin"
+      X-Frame-Options "DENY"
     }
     @javascript path_regexp js \.m?js$
     header @javascript Content-Type "application/javascript; charset=utf-8"
